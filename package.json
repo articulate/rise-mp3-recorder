@@ -1,5 +1,5 @@
 {
-  "name": "@articulate/dynapro",
+  "name": "@articulate/rise-mp3-recorder",
   "version": "0.1.0",
   "description": "Library for recording MP3 audio in the browser",
   "main": "build/mp3Recorder.js",
