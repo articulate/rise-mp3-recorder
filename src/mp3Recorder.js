@@ -6,8 +6,10 @@ class Mp3Recorder {
     const blob = new Blob([atob(workerString)], { type: 'application/javascript' })
     const url = URL.createObjectURL(blob)
 
+    const ctx = window.AudioContext || window.webkitAudioContext
+
     this.config = config || {}
-    this.context = new AudioContext()
+    this.context = new ctx()
     this.worker = new Worker(url)
     this.config.sampleRate = this.context.sampleRate
     this.workerSuccess
