@@ -13,6 +13,7 @@ class Mp3Recorder {
     this.worker = new Worker(url)
     this.config.sampleRate = this.context.sampleRate
     this.workerSuccess
+    this.duration = 0
 
     this.worker.postMessage({
       cmd: 'init',
@@ -25,6 +26,7 @@ class Mp3Recorder {
   onAudioProcess(event) {
     // Send microphone data to LAME for MP3 encoding while recording.
     const buffer = event.inputBuffer.getChannelData(0)
+    this.duration += event.inputBuffer.duration;
 
     this.worker.postMessage({
       cmd: 'encode',
@@ -57,6 +59,7 @@ class Mp3Recorder {
     this.setUserMedia()
 
     navigator.getUserMedia({ audio: true }, (stream) => {
+      this.duration = 0
       this.beginRecording(stream)
 
       if (onSuccess && typeof onSuccess === 'function') {

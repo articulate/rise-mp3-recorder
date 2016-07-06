@@ -24,6 +24,7 @@ var Mp3Recorder = function () {
     this.worker = new Worker(url);
     this.config.sampleRate = this.context.sampleRate;
     this.workerSuccess;
+    this.duration = 0;
 
     this.worker.postMessage({
       cmd: 'init',
@@ -38,6 +39,7 @@ var Mp3Recorder = function () {
     value: function onAudioProcess(event) {
       // Send microphone data to LAME for MP3 encoding while recording.
       var buffer = event.inputBuffer.getChannelData(0);
+      this.duration += event.inputBuffer.duration;
 
       this.worker.postMessage({
         cmd: 'encode',
@@ -74,6 +76,7 @@ var Mp3Recorder = function () {
       this.setUserMedia();
 
       navigator.getUserMedia({ audio: true }, function (stream) {
+        _this.duration = 0;
         _this.beginRecording(stream);
 
         if (onSuccess && typeof onSuccess === 'function') {
