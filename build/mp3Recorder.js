@@ -76,7 +76,6 @@ var Mp3Recorder = function () {
       this.setUserMedia();
 
       navigator.getUserMedia({ audio: true }, function (stream) {
-        _this.duration = 0;
         _this.beginRecording(stream);
 
         if (onSuccess && typeof onSuccess === 'function') {
@@ -138,7 +137,10 @@ var Mp3Recorder = function () {
             var blob = new Blob(e.data.buf, { type: 'audio/mp3' });
 
             this.blobToDataURL(blob, function (url) {
-              return _this2.workerSuccess(url);
+              var duration = _this2.duration;
+              _this2.duration = 0;
+
+              return _this2.workerSuccess({ url: url, duration: duration });
             });
           }
           break;

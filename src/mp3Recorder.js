@@ -59,7 +59,6 @@ class Mp3Recorder {
     this.setUserMedia()
 
     navigator.getUserMedia({ audio: true }, (stream) => {
-      this.duration = 0
       this.beginRecording(stream)
 
       if (onSuccess && typeof onSuccess === 'function') {
@@ -113,8 +112,11 @@ class Mp3Recorder {
         if (this.workerSuccess) {
           const blob = new Blob(e.data.buf, { type: 'audio/mp3' })
 
-          this.blobToDataURL(blob, (url) =>{
-            return this.workerSuccess(url)
+          this.blobToDataURL(blob, (url) => {
+            const duration = this.duration
+            this.duration = 0
+
+            return this.workerSuccess({ url, duration })
           })
         }
         break;
