@@ -60,11 +60,6 @@ var Mp3Recorder = function () {
       this.microphone.connect(this.processor);
       this.processor.connect(this.context.destination);
     }
-  }, {
-    key: 'setUserMedia',
-    value: function setUserMedia() {
-      navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-    }
 
     // Function for kicking off recording once the button is pressed.
 
@@ -73,9 +68,9 @@ var Mp3Recorder = function () {
     value: function start(onSuccess, onError) {
       var _this = this;
 
-      this.setUserMedia();
+      var getUserMedia = (window.navigator.getUserMedia || window.navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia).bind(window.navigator);
 
-      navigator.getUserMedia({ audio: true }, function (stream) {
+      getUserMedia({ audio: true }, function (stream) {
         _this.beginRecording(stream);
 
         if (onSuccess && typeof onSuccess === 'function') {

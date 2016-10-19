@@ -47,18 +47,11 @@ class Mp3Recorder {
     this.processor.connect(this.context.destination);
   }
 
-  setUserMedia() {
-    navigator.getUserMedia = navigator.getUserMedia ||
-                          navigator.webkitGetUserMedia ||
-                          navigator.mozGetUserMedia ||
-                          navigator.msGetUserMedia
-  }
-
   // Function for kicking off recording once the button is pressed.
   start(onSuccess, onError) {
-    this.setUserMedia()
+    const getUserMedia = (window.navigator.getUserMedia || window.navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia).bind(window.navigator);
 
-    navigator.getUserMedia({ audio: true }, (stream) => {
+    getUserMedia({ audio: true }, (stream) => {
       this.beginRecording(stream)
 
       if (onSuccess && typeof onSuccess === 'function') {
