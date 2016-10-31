@@ -1,5 +1,19 @@
 const workerString = "${workerString}"
 
+const getUserMedia = constraints => {
+  if (navigator.mediaDevices)
+    return navigator.mediaDevices.getUserMedia(constraints)
+
+  const legacyUserMedia = (
+    navigator.getUserMedia ||
+    navigator.mozGetUserMedia ||
+    navigator.msGetUserMedia ||
+    navigator.webkitGetUserMedia
+  ).bind(navigator)
+
+  return new Promise((res, rej) => legacyUserMedia(constraints, res, rej))
+}
+
 class Mp3Recorder {
 
   constructor(config) {
@@ -20,13 +34,13 @@ class Mp3Recorder {
       config: this.config
     })
 
-    this.worker.onmessage = this.onmessage.bind(this);
+    this.worker.onmessage = this.onmessage.bind(this)
   }
 
   onAudioProcess(event) {
     // Send microphone data to LAME for MP3 encoding while recording.
     const buffer = event.inputBuffer.getChannelData(0)
-    this.duration += event.inputBuffer.duration;
+    this.duration += event.inputBuffer.duration
 
     this.worker.postMessage({
       cmd: 'encode',
@@ -43,21 +57,19 @@ class Mp3Recorder {
     this.processor.onaudioprocess = this.onAudioProcess.bind(this)
 
     // Begin retrieving microphone data.
-    this.microphone.connect(this.processor);
-    this.processor.connect(this.context.destination);
+    this.microphone.connect(this.processor)
+    this.processor.connect(this.context.destination)
   }
 
   // Function for kicking off recording once the button is pressed.
   start(onSuccess, onError) {
-    const getUserMedia = (window.navigator.getUserMedia || window.navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia).bind(window.navigator);
-
-    getUserMedia({ audio: true }, (stream) => {
+    getUserMedia({ audio: true }).then(stream => {
       this.beginRecording(stream)
 
       if (onSuccess && typeof onSuccess === 'function') {
         onSuccess()
       }
-    }, (error) => {
+    }).catch(error => {
       if (onError && typeof onError === 'function') {
         onError(error)
       }
@@ -85,11 +97,11 @@ class Mp3Recorder {
   }
 
   blobToDataURL(blob, callback) {
-    const a = new FileReader();
+    const a = new FileReader()
     a.onload = function (e) {
-      callback(e.target.result);
+      callback(e.target.result)
     }
-    a.readAsDataURL(blob);
+    a.readAsDataURL(blob)
   }
 
   getMp3Url(onSuccess) {
@@ -112,12 +124,12 @@ class Mp3Recorder {
             return this.workerSuccess({ url, duration })
           })
         }
-        break;
+        break
       case 'error':
-        console.log('error');
-        break;
+        console.log('error')
+        break
       default:
-        console.log('I just received a message I know not how to handle.', e.data);
+        console.log('I just received a message I know not how to handle.', e.data)
     }
   }
 }
