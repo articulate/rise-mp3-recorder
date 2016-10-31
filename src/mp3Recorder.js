@@ -1,12 +1,18 @@
-const { navigator } = window,
-      getUserMedia  = navigator.mediaDevices
-        ? navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices)
-        : (navigator.getUserMedia ||
-           navigator.webkitGetUserMedia ||
-           navigator.mozGetUserMedia ||
-           navigator.msGetUserMedia).bind(navigator)
-
 const workerString = "${workerString}"
+
+const getUserMedia = constraints => {
+  if (navigator.mediaDevices)
+    return navigator.mediaDevices.getUserMedia(constraints)
+
+  const legacyUserMedia = (
+    navigator.getUserMedia ||
+    navigator.mozGetUserMedia ||
+    navigator.msGetUserMedia ||
+    navigator.webkitGetUserMedia
+  ).bind(navigator)
+
+  return new Promise((res, rej) => legacyUserMedia(constraints, res, rej))
+}
 
 class Mp3Recorder {
 
@@ -57,13 +63,13 @@ class Mp3Recorder {
 
   // Function for kicking off recording once the button is pressed.
   start(onSuccess, onError) {
-    getUserMedia({ audio: true }, (stream) => {
+    getUserMedia({ audio: true }).then(stream => {
       this.beginRecording(stream)
 
       if (onSuccess && typeof onSuccess === 'function') {
         onSuccess()
       }
-    }, (error) => {
+    }).catch(error => {
       if (onError && typeof onError === 'function') {
         onError(error)
       }
