@@ -23,11 +23,9 @@
     "mp3"
   ],
   "author": "Spencer Davis",
-  "dependencies": {
-    "babel-preset-es2015": "^6.5.0"
-  },
   "devDependencies": {
-    "babel-cli": "^6.5.1"
+    "babel-cli": "^6.5.1",
+    "babel-preset-es2015": "^6.5.0"
   },
   "license": "ISC",
   "bugs": {
