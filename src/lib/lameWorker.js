@@ -1,16 +1,16 @@
-importScripts('https://s3.amazonaws.com/rise-runtime/encoders/lame.min.js')
-
 let mp3Encoder, samplesMono, lame, config, dataBuffer
 
 const maxSamples = 1152
 
 const defaultConfig = {
-  debug: true
+  lameLibUrl: 'https://cdn.articulate.com/assets/rise/lame.min.js'
 }
 
 function initialize(prefConfig) {
   console.log('Lame Worker initialized')
   config = prefConfig || defaultConfig
+  importScripts(config.lameLibUrl)
+  
   lame = new lamejs()
   mp3Encoder = new lame.Mp3Encoder(1, config.sampleRate || 44100, config.bitRate || 128)
   clearBuffer()
