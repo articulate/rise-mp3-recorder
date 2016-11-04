@@ -1,5 +1,7 @@
 .node-version
 .env
+src
+bin
 
 *.log
 
