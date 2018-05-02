@@ -77,6 +77,7 @@ class Mp3Recorder {
   }
 
   stop(onSuccess) {
+    console.log('stopping', this)
     if (this.processor && this.microphone) {
       // Clean up the Web Audio API resources.
       this.microphone.disconnect()
