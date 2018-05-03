@@ -6,7 +6,7 @@ const getUserMedia = constraints => {
     return navigator.mediaDevices.getUserMedia(constraints)
 
   const legacyUserMedia = (
-    navigator.getUserMedia||
+    navigator.getUserMedia ||
     navigator.mozGetUserMedia ||
     navigator.msGetUserMedia ||
     navigator.webkitGetUserMedia
