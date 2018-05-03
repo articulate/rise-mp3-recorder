@@ -1,11 +1,12 @@
-const workerString = "${workerString}"
+// eslint-disable-next-line no-template-curly-in-string
+const workerString = '${workerString}'
 
 const getUserMedia = constraints => {
   if (navigator.mediaDevices)
     return navigator.mediaDevices.getUserMedia(constraints)
 
   const legacyUserMedia = (
-    navigator.getUserMedia ||
+    navigator.getUserMedia||
     navigator.mozGetUserMedia ||
     navigator.msGetUserMedia ||
     navigator.webkitGetUserMedia
@@ -15,9 +16,8 @@ const getUserMedia = constraints => {
 }
 
 class Mp3Recorder {
-
   constructor(config) {
-    const blob = new Blob([atob(workerString)], { type: 'application/javascript' })
+    const blob = new Blob([ atob(workerString) ], { type: 'application/javascript' })
     const url = URL.createObjectURL(blob)
 
     const ctx = window.AudioContext || window.webkitAudioContext
@@ -56,6 +56,9 @@ class Mp3Recorder {
     // Set up callback function as raw audio is returned
     this.processor.onaudioprocess = this.onAudioProcess.bind(this)
 
+    // Attach active stream to class in order to remove tracks on stop()
+    this.stream = stream
+
     // Begin retrieving microphone data.
     this.microphone.connect(this.processor)
     this.processor.connect(this.context.destination)
@@ -77,9 +80,9 @@ class Mp3Recorder {
   }
 
   stop(onSuccess) {
-    console.log('stopping', this)
     if (this.processor && this.microphone) {
       // Clean up the Web Audio API resources.
+      this.stream.getTracks().forEach(track => track.stop())
       this.microphone.disconnect()
       this.processor.disconnect()
       this.processor.onaudioprocess = null
