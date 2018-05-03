@@ -56,7 +56,7 @@ class Mp3Recorder {
     // Set up callback function as raw audio is returned
     this.processor.onaudioprocess = this.onAudioProcess.bind(this)
 
-    // Attach active tracks to class in order to remove tracks on stop()
+    // Attach active tracks to class in order to stop tracks on stop()
     this.tracks = stream.getTracks()
 
     // Begin retrieving microphone data.
