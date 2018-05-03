@@ -56,8 +56,8 @@ class Mp3Recorder {
     // Set up callback function as raw audio is returned
     this.processor.onaudioprocess = this.onAudioProcess.bind(this)
 
-    // Attach active stream to class in order to remove tracks on stop()
-    this.stream = stream
+    // Attach active tracks to class in order to remove tracks on stop()
+    this.tracks = stream.getTracks()
 
     // Begin retrieving microphone data.
     this.microphone.connect(this.processor)
@@ -82,7 +82,7 @@ class Mp3Recorder {
   stop(onSuccess) {
     if (this.processor && this.microphone) {
       // Clean up the Web Audio API resources.
-      this.stream.getTracks().forEach(track => track.stop())
+      this.tracks.forEach(track => track.stop())
       this.microphone.disconnect()
       this.processor.disconnect()
       this.processor.onaudioprocess = null
