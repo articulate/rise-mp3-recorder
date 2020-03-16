@@ -6,6 +6,7 @@
   "scripts": {
     "build:publish": "npm run build && npm publish",
     "build": "babel src -d build",
+    "lint": "eslint .",
     "postbuild": "./bin/buildWorker.js",
     "preversion": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
