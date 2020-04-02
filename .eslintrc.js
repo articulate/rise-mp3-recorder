@@ -2,9 +2,14 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
-    node: true
+    node: true,
+    worker: true
   },
   extends: 'eslint:recommended',
+  ignorePatterns: [ 'build/' ],
+  globals: {
+    'lamejs': 'readonly'
+  },
   parserOptions: {
     sourceType: 'module'
   },

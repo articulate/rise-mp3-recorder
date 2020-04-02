@@ -8,11 +8,13 @@ const defaultConfig = {
 
 function initialize(prefConfig) {
   console.log('Lame Worker initialized')
+
   config = prefConfig || defaultConfig
   importScripts(config.lameLibUrl)
-  
+
   lame = new lamejs()
   mp3Encoder = new lame.Mp3Encoder(1, config.sampleRate || 44100, config.bitRate || 128)
+
   clearBuffer()
 }
 
@@ -35,7 +37,7 @@ function convertBuffer(arrayBuffer) {
 function floatTo16BitPCM(input, output) {
   for (let i = 0; i < input.length; i++) {
     let s = Math.max(-1, Math.min(1, input[i]))
-    output[i] = (s < 0 ? s * 0x8000 : s * 0x7FFF)
+    output[i] = s < 0 ? s * 0x8000 : s * 0x7FFF
   }
 }
 
@@ -60,7 +62,7 @@ function finish() {
   })
 
   if (config.debug) {
-    console.log('Sending finish command');
+    console.log('Sending finish command')
   }
   clearBuffer() //free up memory
 }
